@@ -1,6 +1,6 @@
 import type { Request } from '../router.ts';
 import type { AppContext, User } from '../types.ts';
-import { findSession } from './sessions.ts';
+import { findSession, touchSession } from './sessions.ts';
 
 export function bearerToken(req: Pick<Request, 'headers'>): string | null {
   const header = req.headers.authorization;
@@ -14,5 +14,6 @@ export function authenticateRequest(ctx: AppContext, req: Pick<Request, 'headers
   if (!token) return null;
   const session = findSession(ctx, token);
   if (!session) return null;
+  touchSession(ctx, session);
   return ctx.store.users.get(session.userId) ?? null;
 }

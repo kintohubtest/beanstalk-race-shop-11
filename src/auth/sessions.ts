@@ -24,6 +24,12 @@ export function findSession(ctx: AppContext, token: string): Session | undefined
   return session;
 }
 
+/** Push a live session's expiry out to a full lifetime from now. */
+export function touchSession(ctx: AppContext, session: Session): Session {
+  const expiresAt = new Date(ctx.clock.now().getTime() + ctx.config.sessionTtlSeconds * 1000).toISOString();
+  return ctx.store.sessions.update(session.id, { expiresAt });
+}
+
 export function destroySession(ctx: AppContext, token: string): void {
   ctx.store.sessions.delete(token);
 }
