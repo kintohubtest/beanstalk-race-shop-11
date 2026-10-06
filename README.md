@@ -24,7 +24,7 @@ Routes are registered in one place, `src/routes.ts`.
 | GET | `/products`, `/products/:id` | public |
 | POST, PATCH | `/products`, `/products/:id` | admin |
 | GET, POST, PATCH, DELETE | `/cart`, `/cart/items`, `/cart/items/:productId` | user |
-| POST | `/checkout`, `/orders/:id/cancel` | user |
+| POST | `/checkout`, `/orders/:id/cancel`, `/orders/:id/reorder` | user |
 | GET | `/orders`, `/orders/:id`, `/orders/:id/invoice`, `/orders/:id/shipment` | user |
 | GET | `/invoices/:id` | user |
 | POST | `/invoices/:id/pay`, `/orders/:id/ship` | admin |

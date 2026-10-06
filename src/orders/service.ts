@@ -1,8 +1,9 @@
 import { voidInvoice } from '../billing/service.ts';
 import { release } from '../inventory/stock.ts';
+import { addItem } from '../cart/service.ts';
 import { conflict, notFound } from '../lib/errors.ts';
 import { enqueueNotification } from '../notifications/queue.ts';
-import type { AppContext, Order, OrderStatus, User } from '../types.ts';
+import type { AppContext, CartLine, Order, OrderStatus, User } from '../types.ts';
 
 const CANCELLABLE: OrderStatus[] = ['pending', 'confirmed'];
 
@@ -37,4 +38,21 @@ export function cancelOrder(ctx: AppContext, user: User, id: string): Order {
   });
   enqueueNotification(ctx, 'order_cancelled', cancelled);
   return cancelled;
+}
+
+/** Put the lines of one of the user's own earlier orders back into their cart. */
+export function reorder(ctx: AppContext, user: User, id: string): { added: CartLine[]; skipped: string[] } {
+  const order = getOrder(ctx, id);
+  if (order.userId !== user.id) throw notFound('order');
+  const added: CartLine[] = [];
+  const skipped: string[] = [];
+  for (const line of order.lines) {
+    if (!ctx.store.products.get(line.productId)?.active) {
+      skipped.push(line.productId);
+      continue;
+    }
+    addItem(ctx, user.id, line.productId, line.quantity);
+    added.push({ productId: line.productId, quantity: line.quantity });
+  }
+  return { added, skipped };
 }
