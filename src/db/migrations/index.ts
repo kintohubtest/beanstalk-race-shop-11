@@ -4,6 +4,7 @@ import { migration0002 } from './0002_seed_coupons.ts';
 import { migration0003 } from './0003_product_weight.ts';
 import { migration0004 } from './0004_order_shipping.ts';
 import { migration0005 } from './0005_user_roles.ts';
+import { migration0006 } from './0006_order_note.ts';
 
 /** Every migration, in order. Add new ones at the end. */
 export const migrations: Migration[] = [
@@ -12,4 +13,5 @@ export const migrations: Migration[] = [
   migration0003,
   migration0004,
   migration0005,
+  migration0006,
 ];

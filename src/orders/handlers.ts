@@ -16,6 +16,7 @@ export const checkout: Handler = (req, ctx) => {
   const order = placeOrder(ctx, req.user!, {
     addressIndex: requireInt(body, 'addressIndex'),
     couponCode: optionalString(body, 'couponCode'),
+    note: optionalString(body, 'note'),
     method: method as ShippingMethod | undefined,
   });
   return created(order);

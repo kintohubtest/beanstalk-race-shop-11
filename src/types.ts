@@ -196,6 +196,8 @@ export interface Order {
   shippingAddress: Address;
   invoiceId: string | null;
   trackingNumber: string | null;
+  /** Free-text delivery instructions from the customer. */
+  note: string;
   createdAt: string;
   updatedAt: string;
 }
