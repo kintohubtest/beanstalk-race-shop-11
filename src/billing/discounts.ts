@@ -12,7 +12,8 @@ export function validateCoupon(coupon: Coupon, subtotal: Cents, currency: Curren
 
 /** How much `coupon` takes off a cart worth `subtotal`. */
 export function couponDiscount(coupon: Coupon, subtotal: Cents): Cents {
-  return coupon.kind === 'percent' ? percentOf(subtotal, coupon.value) : coupon.value;
+  const discount = coupon.kind === 'percent' ? percentOf(subtotal, coupon.value) : coupon.value;
+  return Math.min(discount, subtotal);
 }
 
 /** Spread a cart-level discount over the lines in proportion to their value. */
