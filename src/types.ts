@@ -130,6 +130,8 @@ export interface Invoice {
   discount: Cents;
   couponCode: string | null;
   tax: Cents;
+  /** `federal + regional` always equals `tax`. */
+  taxBreakdown: { federal: Cents; regional: Cents };
   total: Cents;
   status: InvoiceStatus;
   issuedAt: string;
