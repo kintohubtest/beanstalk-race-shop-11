@@ -1,13 +1,18 @@
 import { randomBytes } from 'node:crypto';
 import type { AppContext, Session } from '../types.ts';
 
+/** When a session that starts at `from` expires. */
+export function sessionExpiry(ctx: AppContext, from: Date = ctx.clock.now()): string {
+  return new Date(from.getTime() + ctx.config.sessionTtlSeconds * 1000).toISOString();
+}
+
 export function createSession(ctx: AppContext, userId: string): Session {
   const now = ctx.clock.now();
   return ctx.store.sessions.insert({
     id: randomBytes(24).toString('hex'),
     userId,
     createdAt: now.toISOString(),
-    expiresAt: new Date(now.getTime() + ctx.config.sessionTtlSeconds * 1000).toISOString(),
+    expiresAt: sessionExpiry(ctx, now),
   });
 }
 
