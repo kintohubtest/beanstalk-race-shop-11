@@ -45,6 +45,7 @@ Settings come from environment variables (see `src/config.ts`).
 | `PASSWORD_COST` | `1024` | scrypt cost for password hashes |
 | `MAX_CART_LINES` | `50` | Most distinct products in one cart |
 | `LOW_STOCK_THRESHOLD` | `5` | Available quantity at or below which a product counts as low on stock |
+| `PAYMENT_TERMS_DAYS` | `30` | Days between an invoice being issued and falling due |
 
 ## Behaviour
 
