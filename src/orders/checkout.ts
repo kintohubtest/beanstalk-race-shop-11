@@ -64,7 +64,7 @@ export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Ord
     discount: invoice.discount,
     tax: invoice.tax,
     shippingCost: shipping.cost,
-    total: invoice.total,
+    total: invoice.total + shipping.cost,
     couponCode: invoice.couponCode,
     shippingAddress: address,
     invoiceId: invoice.id,

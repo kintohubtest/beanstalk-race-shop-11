@@ -16,6 +16,7 @@ All notable changes to Beanstalk Shop are recorded here.
 - Product search ignores letter case.
 - Product and order lists send an `x-total-count` header.
 - Amounts of 1,000 or more are shown with thousands separators.
+- The order `total` includes shipping.
 
 ### Fixed
 

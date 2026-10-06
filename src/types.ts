@@ -190,7 +190,7 @@ export interface Order {
   discount: Cents;
   tax: Cents;
   shippingCost: Cents;
-  /** Goods after discount, plus tax. Shipping is tracked separately in `shippingCost`. */
+  /** Everything payable: goods after discount, plus tax, plus shipping. */
   total: Cents;
   couponCode: string | null;
   shippingAddress: Address;
