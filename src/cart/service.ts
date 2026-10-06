@@ -1,3 +1,4 @@
+import { assertAvailable } from '../inventory/stock.ts';
 import { badRequest } from '../lib/errors.ts';
 import { sumCents } from '../lib/money.ts';
 import type { AppContext, Cart, Cents, Product } from '../types.ts';
@@ -34,6 +35,7 @@ export function addItem(ctx: AppContext, userId: string, productId: string, quan
   if (!product.active) throw badRequest(`${product.name} is not available`);
   const cart = getCart(ctx, userId);
   const existing = cart.lines.find((line) => line.productId === productId);
+  assertAvailable(ctx, productId, (existing?.quantity ?? 0) + quantity);
   if (existing) {
     existing.quantity += quantity;
   } else {
@@ -49,6 +51,7 @@ export function setQuantity(ctx: AppContext, userId: string, productId: string, 
   const cart = getCart(ctx, userId);
   const line = cart.lines.find((l) => l.productId === productId);
   if (!line) throw badRequest('product is not in the cart');
+  if (quantity > line.quantity) assertAvailable(ctx, productId, quantity);
   if (quantity === 0) cart.lines = cart.lines.filter((l) => l !== line);
   else line.quantity = quantity;
   return saveCart(ctx, cart);

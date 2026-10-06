@@ -56,4 +56,6 @@ Settings come from environment variables (see `src/config.ts`).
 - Standard shipping is charged by destination zone and weight and is free for orders with $75 or more of goods; express costs double and is never free.
 - A session lasts `SESSION_TTL_SECONDS` from login.
 - Stock is reserved at checkout and released when an order is cancelled.
+- A session lasts `SESSION_TTL_SECONDS` from login.
+- Stock is reserved at checkout and released when an order is cancelled. Carts cannot hold more than is available.
 - Coupons take a percentage or a fixed amount off and can have a minimum subtotal.

@@ -9,6 +9,12 @@ export function availableQuantity(level: StockLevel): number {
   return level.onHand - level.reserved;
 }
 
+/** Fail with a 409 unless `quantity` units of the product could be reserved right now. */
+export function assertAvailable(ctx: AppContext, productId: string, quantity: number): void {
+  const available = availableQuantity(getStock(ctx, productId));
+  if (quantity > available) throw conflict(`only ${Math.max(available, 0)} left in stock`);
+}
+
 export function setStock(ctx: AppContext, productId: string, onHand: number): StockLevel {
   if (!Number.isInteger(onHand) || onHand < 0) throw badRequest('onHand must be a non-negative integer');
   const existing = ctx.store.stock.get(productId);
