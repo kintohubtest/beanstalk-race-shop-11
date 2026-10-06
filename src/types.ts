@@ -119,6 +119,12 @@ export interface InvoiceLine {
 
 export type InvoiceStatus = 'open' | 'paid' | 'void';
 
+export interface Refund {
+  productId: string;
+  amount: Cents;
+  createdAt: string;
+}
+
 export interface Invoice {
   id: string;
   number: string;
@@ -137,6 +143,7 @@ export interface Invoice {
   issuedAt: string;
   dueAt: string;
   paidAt: string | null;
+  refunds?: Refund[];
 }
 
 // --- inventory
