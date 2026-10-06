@@ -19,7 +19,9 @@ export function issueInvoice(ctx: AppContext, request: InvoiceRequest): Invoice 
   }
   const draft = buildInvoice(ctx, { ...rest, coupon });
   const id = ctx.store.nextId('inv');
-  const invoice = ctx.store.invoices.insert({ ...draft, id, number: `INV-${id.slice(4)}` });
+  const year = ctx.clock.now().getUTCFullYear();
+  const sequence = ctx.store.nextId(`inv${year}`).split('_')[1];
+  const invoice = ctx.store.invoices.insert({ ...draft, id, number: `INV-${year}-${sequence}` });
   if (coupon) ctx.store.coupons.update(coupon.id, { redemptions: coupon.redemptions + 1 });
   return invoice;
 }
