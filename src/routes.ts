@@ -42,6 +42,7 @@ export function registerRoutes(router: Router): void {
 
   // billing
   router.add('GET', '/orders/:id/invoice', 'user', billing.invoiceForOrder);
+  router.add('GET', '/invoices/overdue', 'admin', billing.overdue);
   router.add('GET', '/invoices/:id', 'user', billing.getInvoice);
   router.add('POST', '/invoices/:id/pay', 'admin', billing.payInvoice);
 

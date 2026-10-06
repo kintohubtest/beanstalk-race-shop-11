@@ -2,7 +2,12 @@ import { notFound } from '../lib/errors.ts';
 import { ok } from '../router.ts';
 import type { Handler } from '../router.ts';
 import type { Invoice, User } from '../types.ts';
-import { getInvoice as loadInvoice, invoiceForOrder as loadInvoiceForOrder, markPaid } from './service.ts';
+import {
+  getInvoice as loadInvoice,
+  invoiceForOrder as loadInvoiceForOrder,
+  listOverdue,
+  markPaid,
+} from './service.ts';
 
 /** Customers only see their own invoices; admins see all. Anything else looks like a 404. */
 function visibleTo(user: User, invoice: Invoice): Invoice {
@@ -16,3 +21,15 @@ export const invoiceForOrder: Handler = (req, ctx) =>
   ok(visibleTo(req.user!, loadInvoiceForOrder(ctx, req.params.id)));
 
 export const payInvoice: Handler = (req, ctx) => ok(markPaid(ctx, req.params.id));
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export const overdue: Handler = (_req, ctx) => {
+  const now = ctx.clock.now().getTime();
+  return ok(
+    listOverdue(ctx).map((invoice) => ({
+      ...invoice,
+      daysOverdue: Math.max(Math.floor((now - new Date(invoice.dueAt).getTime()) / DAY_MS), 1),
+    })),
+  );
+};

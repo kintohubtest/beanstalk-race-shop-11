@@ -51,3 +51,11 @@ export function voidInvoice(ctx: AppContext, id: string): Invoice {
   if (invoice.status === 'paid') throw conflict(`invoice ${invoice.number} is already paid`);
   return ctx.store.invoices.update(id, { status: 'void' });
 }
+
+/** Open invoices past their due date, longest overdue first. */
+export function listOverdue(ctx: AppContext): Invoice[] {
+  const now = ctx.clock.now().getTime();
+  return ctx.store.invoices
+    .find((i) => i.status === 'open' && new Date(i.dueAt).getTime() < now)
+    .sort((a, b) => a.dueAt.localeCompare(b.dueAt) || a.id.localeCompare(b.id));
+}
