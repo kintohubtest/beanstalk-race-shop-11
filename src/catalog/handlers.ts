@@ -1,3 +1,4 @@
+import { notFound } from '../lib/errors.ts';
 import { paginate } from '../lib/pagination.ts';
 import { asBody, optionalString, requireInt, requireString } from '../lib/validate.ts';
 import { created, json, ok } from '../router.ts';
@@ -11,7 +12,11 @@ export const list: Handler = (req, ctx) => {
   return json(200, page.items, { 'x-total-count': String(page.total) });
 };
 
-export const get: Handler = (req, ctx) => ok(getProduct(ctx, req.params.id));
+export const get: Handler = (req, ctx) => {
+  const product = getProduct(ctx, req.params.id);
+  if (!product.active) throw notFound('product');
+  return ok(product);
+};
 
 export const create: Handler = (req, ctx) => {
   const body = asBody(req.body);
