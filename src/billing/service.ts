@@ -17,6 +17,8 @@ export function issueInvoice(ctx: AppContext, request: InvoiceRequest): Invoice 
   if (couponCode && !coupon) throw badRequest('unknown coupon code');
   if (coupon && coupon.maxRedemptions !== null && coupon.redemptions >= coupon.maxRedemptions) {
     throw conflict('coupon has been fully redeemed');
+  if (coupon?.expiresAt && new Date(coupon.expiresAt).getTime() <= ctx.clock.now().getTime()) {
+    throw badRequest('coupon has expired');
   }
   const draft = buildInvoice(ctx, { ...rest, coupon });
   const id = ctx.store.nextId('inv');
