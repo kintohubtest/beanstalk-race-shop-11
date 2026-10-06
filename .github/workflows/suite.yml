@@ -1,0 +1,22 @@
+name: suite
+on:
+  pull_request:
+  merge_group:
+concurrency:
+  group: suite-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "25"
+      - name: suite
+        run: node --test --test-timeout=60000 --test-reporter=spec
+        env:
+          CI: "1"
