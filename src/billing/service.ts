@@ -1,6 +1,7 @@
 import { badRequest, conflict, notFound } from '../lib/errors.ts';
 import { enqueueNotification } from '../notifications/queue.ts';
 import type { AppContext, Coupon, Invoice } from '../types.ts';
+import type { AppContext, Coupon, Invoice, InvoiceStatus } from '../types.ts';
 import { buildInvoice } from './invoice.ts';
 import type { InvoiceInput } from './invoice.ts';
 
@@ -35,6 +36,13 @@ export function invoiceForOrder(ctx: AppContext, orderId: string): Invoice {
   const invoice = ctx.store.invoices.findOne((i) => i.orderId === orderId);
   if (!invoice) throw notFound('invoice');
   return invoice;
+}
+
+/** A user's invoices, newest first, optionally only those with `status`. */
+export function listInvoices(ctx: AppContext, userId: string, status?: InvoiceStatus): Invoice[] {
+  return ctx.store.invoices
+    .find((i) => i.userId === userId && (status === undefined || i.status === status))
+    .sort((a, b) => b.issuedAt.localeCompare(a.issuedAt) || b.id.localeCompare(a.id));
 }
 
 export function markPaid(ctx: AppContext, id: string): Invoice {
