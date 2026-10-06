@@ -39,15 +39,18 @@ export function getProduct(ctx: AppContext, id: string): Product {
   return ctx.store.products.require(id);
 }
 
+/** The products that pass `filter`, in their original order. */
+export function filterProducts(products: Product[], filter: ProductFilter = {}): Product[] {
+  return products.filter((p) => {
+    if (!filter.includeInactive && !p.active) return false;
+    if (filter.category && p.category !== filter.category) return false;
+    if (filter.q && !matchesQuery(p, filter.q)) return false;
+    return true;
+  });
+}
+
 export function listProducts(ctx: AppContext, filter: ProductFilter = {}): Product[] {
-  return ctx.store.products
-    .find((p) => {
-      if (!filter.includeInactive && !p.active) return false;
-      if (filter.category && p.category !== filter.category) return false;
-      if (filter.q && !matchesQuery(p, filter.q)) return false;
-      return true;
-    })
-    .sort((a, b) => a.name.localeCompare(b.name));
+  return filterProducts(ctx.store.products.all(), filter).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export type ProductPatch = Partial<
