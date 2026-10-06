@@ -11,6 +11,8 @@ export interface Config {
   /** scrypt cost parameter (N). Kept low so the test suite stays fast. */
   passwordCost: number;
   maxCartLines: number;
+  /** Most units of one product allowed in a single order. */
+  maxLineQuantity: number;
   lowStockThreshold: number;
   orderNumberPrefix: string;
   pageSize: number;
@@ -26,6 +28,7 @@ export const defaultConfig: Config = {
   sessionTtlSeconds: 3600,
   passwordCost: 1024,
   maxCartLines: 50,
+  maxLineQuantity: 10,
   lowStockThreshold: 5,
   orderNumberPrefix: 'BS',
   pageSize: 20,
@@ -53,6 +56,7 @@ export function loadConfig(env: Record<string, string | undefined> = {}): Config
     sessionTtlSeconds: intFrom(env.SESSION_TTL_SECONDS, defaultConfig.sessionTtlSeconds),
     passwordCost: intFrom(env.PASSWORD_COST, defaultConfig.passwordCost),
     maxCartLines: intFrom(env.MAX_CART_LINES, defaultConfig.maxCartLines),
+    maxLineQuantity: intFrom(env.MAX_LINE_QUANTITY, defaultConfig.maxLineQuantity),
     lowStockThreshold: intFrom(env.LOW_STOCK_THRESHOLD, defaultConfig.lowStockThreshold),
     paymentTermsDays: intFrom(env.PAYMENT_TERMS_DAYS, defaultConfig.paymentTermsDays),
   };

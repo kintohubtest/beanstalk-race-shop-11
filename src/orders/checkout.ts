@@ -21,6 +21,12 @@ export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Ord
   const note = input.note?.trim() ?? '';
   if (note.length > 200) throw badRequest('note must be at most 200 characters');
   const cart = getCart(ctx, user.id);
+  for (const line of cart.lines) {
+    if (line.quantity > ctx.config.maxLineQuantity) {
+      const name = ctx.store.products.get(line.productId)?.name ?? line.productId;
+      throw badRequest(`at most ${ctx.config.maxLineQuantity} units of ${name} per order`);
+    }
+  }
   const priced = priceCart(ctx, cart);
 
   reserve(ctx, cart.lines);
