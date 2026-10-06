@@ -17,12 +17,13 @@ export function toPublic(user: User): PublicUser {
 }
 
 export function findByEmail(ctx: AppContext, email: string): User | undefined {
-  return ctx.store.users.findOne((u) => u.email === email.trim());
+  return ctx.store.users.findOne((u) => u.email === email.trim().toLowerCase());
 }
 
 export function registerUser(ctx: AppContext, input: RegisterInput): User {
   const email = input.email.trim();
   assertAcceptablePassword(input.password, email);
+  const email = input.email.trim().toLowerCase();
   if (!email.includes('@')) throw badRequest('email is invalid');
   if (findByEmail(ctx, email)) throw conflict('email is already registered');
   const { hash, salt } = hashPassword(input.password, ctx.config.passwordCost);
