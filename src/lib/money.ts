@@ -47,7 +47,7 @@ export function allocate(total: Cents, weights: number[]): Cents[] {
 export function formatMoney(amount: Cents, currency: Currency = 'USD'): string {
   const sign = amount < 0 ? '-' : '';
   const abs = Math.abs(amount);
-  const whole = Math.floor(abs / 100);
+  const whole = Math.floor(abs / 100).toLocaleString('en-US');
   const fraction = String(abs % 100).padStart(2, '0');
   return `${sign}${SYMBOLS[currency]}${whole}.${fraction}`;
 }
