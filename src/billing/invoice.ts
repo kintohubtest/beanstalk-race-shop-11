@@ -70,7 +70,7 @@ export function buildInvoice(ctx: AppContext, input: InvoiceInput): InvoiceDraft
     total: subtotal - discount + tax,
     status: 'open',
     issuedAt: issuedAt.toISOString(),
-    dueAt: new Date(issuedAt.getTime() + 30 * DAY_MS).toISOString(),
+    dueAt: new Date(issuedAt.getTime() + ctx.config.paymentTermsDays * DAY_MS).toISOString(),
     paidAt: null,
   };
 }

@@ -14,6 +14,8 @@ export interface Config {
   lowStockThreshold: number;
   orderNumberPrefix: string;
   pageSize: number;
+  /** Days between an invoice being issued and falling due. */
+  paymentTermsDays: number;
 }
 
 export const defaultConfig: Config = {
@@ -27,6 +29,7 @@ export const defaultConfig: Config = {
   lowStockThreshold: 5,
   orderNumberPrefix: 'BS',
   pageSize: 20,
+  paymentTermsDays: 30,
 };
 
 const CURRENCIES = ['USD', 'CAD', 'EUR', 'GBP'];
@@ -51,5 +54,6 @@ export function loadConfig(env: Record<string, string | undefined> = {}): Config
     passwordCost: intFrom(env.PASSWORD_COST, defaultConfig.passwordCost),
     maxCartLines: intFrom(env.MAX_CART_LINES, defaultConfig.maxCartLines),
     lowStockThreshold: intFrom(env.LOW_STOCK_THRESHOLD, defaultConfig.lowStockThreshold),
+    paymentTermsDays: intFrom(env.PAYMENT_TERMS_DAYS, defaultConfig.paymentTermsDays),
   };
 }
