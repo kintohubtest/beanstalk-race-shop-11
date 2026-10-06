@@ -1,4 +1,5 @@
 import { badRequest, conflict, notFound } from '../lib/errors.ts';
+import { enqueueNotification } from '../notifications/queue.ts';
 import type { AppContext, Coupon, Invoice } from '../types.ts';
 import { buildInvoice } from './invoice.ts';
 import type { InvoiceInput } from './invoice.ts';
@@ -37,7 +38,10 @@ export function invoiceForOrder(ctx: AppContext, orderId: string): Invoice {
 export function markPaid(ctx: AppContext, id: string): Invoice {
   const invoice = getInvoice(ctx, id);
   if (invoice.status !== 'open') throw conflict(`invoice ${invoice.number} is ${invoice.status}`);
-  return ctx.store.invoices.update(id, { status: 'paid', paidAt: ctx.clock.now().toISOString() });
+  const paid = ctx.store.invoices.update(id, { status: 'paid', paidAt: ctx.clock.now().toISOString() });
+  const order = ctx.store.orders.get(invoice.orderId);
+  if (order) enqueueNotification(ctx, 'payment_received', order);
+  return paid;
 }
 
 export function voidInvoice(ctx: AppContext, id: string): Invoice {
