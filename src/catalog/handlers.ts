@@ -1,13 +1,14 @@
 import { paginate } from '../lib/pagination.ts';
 import { asBody, optionalString, requireInt, requireString } from '../lib/validate.ts';
-import { created, ok } from '../router.ts';
+import { created, json, ok } from '../router.ts';
 import type { Handler } from '../router.ts';
 import type { TaxClass } from '../types.ts';
 import { createProduct, getProduct, listProducts, updateProduct } from './service.ts';
 
 export const list: Handler = (req, ctx) => {
   const products = listProducts(ctx, { category: req.query.category, q: req.query.q });
-  return ok(paginate(products, req.query, ctx.config.pageSize));
+  const page = paginate(products, req.query, ctx.config.pageSize);
+  return json(200, page.items, { 'x-total-count': String(page.total) });
 };
 
 export const get: Handler = (req, ctx) => ok(getProduct(ctx, req.params.id));
