@@ -20,6 +20,7 @@ All notable changes to Beanstalk Shop are recorded here.
 
 - Cart totals no longer double count quantities after a line is edited.
 - Session cleanup runs when a user logs out.
+- Quebec orders are charged the full 14.975% sales tax.
 
 ## 0.4.0 - 2026-09-12
 
