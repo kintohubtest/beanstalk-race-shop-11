@@ -13,6 +13,7 @@ All notable changes to Beanstalk Shop are recorded here.
 ### Changed
 
 - Product search ignores letter case.
+- Amounts of 1,000 or more are shown with thousands separators.
 
 ### Fixed
 
