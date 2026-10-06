@@ -51,6 +51,6 @@ Settings come from environment variables (see `src/config.ts`).
 
 - Prices are tax exclusive; tax is worked out per invoice line from the shipping address.
 - Standard shipping is charged by destination zone and weight; express costs double.
-- A session lasts `SESSION_TTL_SECONDS` from login.
+- A session lasts `SESSION_TTL_SECONDS` from login and is extended every time it is used.
 - Stock is reserved at checkout and released when an order is cancelled.
 - Coupons take a percentage or a fixed amount off and can have a minimum subtotal.
