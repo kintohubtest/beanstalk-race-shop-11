@@ -11,6 +11,7 @@ All notable changes to Beanstalk Shop are recorded here.
 - Invoices itemise federal and regional tax (`taxBreakdown`).
 - `POST /orders/:id/reorder` refills the cart from an earlier order.
 - Shipments of high-value orders are flagged `signatureRequired`.
+- Admins can refund a single invoice line (`POST /invoices/:id/refunds`).
 
 ### Changed
 
