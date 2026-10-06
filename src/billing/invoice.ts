@@ -2,6 +2,9 @@ import { applyRate, sumCents } from '../lib/money.ts';
 import type { Address, AppContext, Cents, Coupon, Invoice, InvoiceLine, TaxClass } from '../types.ts';
 import { allocateDiscount, couponDiscount, validateCoupon } from './discounts.ts';
 import { taxComponentsFor, taxRateFor } from './tax.ts';
+import { couponDiscount, validateCoupon } from './coupons.ts';
+import { allocateDiscount } from './discounts.ts';
+import { taxRateFor } from './tax.ts';
 
 export interface InvoiceItem {
   productId: string;
