@@ -27,5 +27,10 @@ export function renderNotification(kind: NotificationKind, order: Order, currenc
         subject: `Order ${order.number} was cancelled`,
         body: `Your order ${order.number} was cancelled. Any payment will be refunded.`,
       };
+    case 'payment_received':
+      return {
+        subject: `Payment received for order ${order.number}`,
+        body: `We have received your payment for order ${order.number}. Thank you!`,
+      };
   }
 }

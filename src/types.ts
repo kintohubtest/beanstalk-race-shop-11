@@ -204,7 +204,7 @@ export interface Order {
 
 // --- notifications
 
-export type NotificationKind = 'order_confirmed' | 'order_shipped' | 'order_cancelled';
+export type NotificationKind = 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'payment_received';
 
 export interface Notification {
   id: string;
