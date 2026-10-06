@@ -18,6 +18,8 @@ export interface Config {
   pageSize: number;
   /** Days between an invoice being issued and falling due. */
   paymentTermsDays: number;
+  /** Orders with a total at or above this many cents are delivered against a signature. */
+  signatureThreshold: number;
 }
 
 export const defaultConfig: Config = {
@@ -33,6 +35,7 @@ export const defaultConfig: Config = {
   orderNumberPrefix: 'BS',
   pageSize: 20,
   paymentTermsDays: 30,
+  signatureThreshold: 25000,
 };
 
 const CURRENCIES = ['USD', 'CAD', 'EUR', 'GBP'];
@@ -59,5 +62,6 @@ export function loadConfig(env: Record<string, string | undefined> = {}): Config
     maxLineQuantity: intFrom(env.MAX_LINE_QUANTITY, defaultConfig.maxLineQuantity),
     lowStockThreshold: intFrom(env.LOW_STOCK_THRESHOLD, defaultConfig.lowStockThreshold),
     paymentTermsDays: intFrom(env.PAYMENT_TERMS_DAYS, defaultConfig.paymentTermsDays),
+    signatureThreshold: intFrom(env.SIGNATURE_THRESHOLD, defaultConfig.signatureThreshold),
   };
 }

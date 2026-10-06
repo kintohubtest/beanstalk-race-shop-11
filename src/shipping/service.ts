@@ -35,6 +35,7 @@ export function markShipped(ctx: AppContext, orderId: string, trackingNumber: st
     method,
     cost: order.shippingCost,
     status: 'shipped',
+    signatureRequired: order.total >= ctx.config.signatureThreshold,
     shippedAt: now,
   });
   const updated = ctx.store.orders.update(orderId, { status: 'shipped', trackingNumber, updatedAt: now });
