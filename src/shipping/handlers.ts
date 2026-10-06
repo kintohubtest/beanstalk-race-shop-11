@@ -33,5 +33,5 @@ export const getShipment: Handler = (req, ctx) => {
   if (order.userId !== req.user!.id && req.user!.role !== 'admin') throw notFound('order');
   const shipment = findShipment(ctx, order.id);
   if (!shipment) throw notFound('shipment');
-  return ok({ ...shipment, trackingNumber: order.trackingNumber });
+  return ok(shipment);
 };

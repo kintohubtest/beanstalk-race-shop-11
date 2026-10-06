@@ -35,9 +35,10 @@ export function markShipped(ctx: AppContext, orderId: string, trackingNumber: st
     method,
     cost: order.shippingCost,
     status: 'shipped',
+    trackingNumber,
     shippedAt: now,
   });
-  const updated = ctx.store.orders.update(orderId, { status: 'shipped', trackingNumber, updatedAt: now });
+  const updated = ctx.store.orders.update(orderId, { status: 'shipped', updatedAt: now });
   enqueueNotification(ctx, 'order_shipped', updated);
   return updated;
 }

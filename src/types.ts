@@ -166,6 +166,7 @@ export interface Shipment {
   method: ShippingMethod;
   cost: Cents;
   status: ShipmentStatus;
+  trackingNumber: string | null;
   shippedAt: string | null;
 }
 
