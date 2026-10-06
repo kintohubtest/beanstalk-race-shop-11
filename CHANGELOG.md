@@ -10,6 +10,7 @@ All notable changes to Beanstalk Shop are recorded here.
 - `GET /inventory/low-stock` for admins.
 - Invoices itemise federal and regional tax (`taxBreakdown`).
 - `POST /orders/:id/reorder` refills the cart from an earlier order.
+- Shipments of high-value orders are flagged `signatureRequired`.
 
 ### Changed
 

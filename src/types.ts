@@ -166,6 +166,7 @@ export interface Shipment {
   method: ShippingMethod;
   cost: Cents;
   status: ShipmentStatus;
+  signatureRequired: boolean;
   shippedAt: string | null;
 }
 
