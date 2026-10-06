@@ -1,7 +1,11 @@
 import { enqueueNotification } from '../notifications/queue.ts';
 import { badRequest, conflict } from '../lib/errors.ts';
+import { sumCents } from '../lib/money.ts';
 import type { AppContext, Order, Shipment, ShippingMethod, ShippingQuote } from '../types.ts';
 import { quoteShipping } from './rates.ts';
+
+/** Standard shipping is free once the goods in an order come to this many cents. */
+export const FREE_SHIPPING_THRESHOLD = 7500;
 
 /** Weight of an order's lines, from current catalog data. */
 export function orderWeight(ctx: AppContext, order: Pick<Order, 'lines'>): number {
@@ -16,7 +20,9 @@ export function quoteForOrder(
   order: Pick<Order, 'lines' | 'shippingAddress'>,
   method: ShippingMethod = 'standard',
 ): ShippingQuote {
-  return quoteShipping(order.shippingAddress, orderWeight(ctx, order), method, ctx.config.defaultCountry);
+  const quote = quoteShipping(order.shippingAddress, orderWeight(ctx, order), method, ctx.config.defaultCountry);
+  const goods = sumCents(order.lines.map((line) => line.unitPrice * line.quantity));
+  return method === 'standard' && goods >= FREE_SHIPPING_THRESHOLD ? { ...quote, cost: 0 } : quote;
 }
 
 export function getShipment(ctx: AppContext, orderId: string): Shipment | undefined {
