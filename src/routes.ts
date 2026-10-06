@@ -38,6 +38,7 @@ export function registerRoutes(router: Router): void {
   router.add('GET', '/orders', 'user', orders.list);
   router.add('GET', '/orders/:id', 'user', orders.get);
   router.add('POST', '/orders/:id/cancel', 'user', orders.cancel);
+  router.add('POST', '/orders/:id/reorder', 'user', orders.reorder);
 
   // billing
   router.add('GET', '/orders/:id/invoice', 'user', billing.invoiceForOrder);

@@ -5,7 +5,7 @@ import { created, json, ok } from '../router.ts';
 import type { Handler } from '../router.ts';
 import type { ShippingMethod } from '../types.ts';
 import { checkout as placeOrder } from './checkout.ts';
-import { cancelOrder, getVisibleOrder, listOrders } from './service.ts';
+import { cancelOrder, getVisibleOrder, listOrders, reorder as reorderOrder } from './service.ts';
 
 export const checkout: Handler = (req, ctx) => {
   const body = asBody(req.body);
@@ -30,3 +30,5 @@ export const list: Handler = (req, ctx) => {
 export const get: Handler = (req, ctx) => ok(getVisibleOrder(ctx, req.user!, req.params.id));
 
 export const cancel: Handler = (req, ctx) => ok(cancelOrder(ctx, req.user!, req.params.id));
+
+export const reorder: Handler = (req, ctx) => ok(reorderOrder(ctx, req.user!, req.params.id));
