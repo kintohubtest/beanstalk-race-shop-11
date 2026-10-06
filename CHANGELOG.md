@@ -8,6 +8,7 @@ All notable changes to Beanstalk Shop are recorded here.
 
 - Order confirmation emails list every line item.
 - `GET /inventory/low-stock` for admins.
+- Invoices itemise federal and regional tax (`taxBreakdown`).
 
 ### Changed
 
