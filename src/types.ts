@@ -99,6 +99,8 @@ export interface Coupon {
   /** Percent (0-100) for `percent`, cents for `fixed`. */
   value: number;
   minSubtotal: Cents;
+  /** Upper bound for the discount of a `percent` coupon. Absent or null: no cap. */
+  maxDiscount?: Cents | null;
   expiresAt: string | null;
   maxRedemptions: number | null;
   redemptions: number;
