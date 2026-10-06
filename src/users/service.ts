@@ -1,4 +1,4 @@
-import { hashPassword } from '../auth/password.ts';
+import { assertAcceptablePassword, hashPassword } from '../auth/password.ts';
 import { badRequest, conflict } from '../lib/errors.ts';
 import type { AppContext, Address, User } from '../types.ts';
 
@@ -22,6 +22,7 @@ export function findByEmail(ctx: AppContext, email: string): User | undefined {
 
 export function registerUser(ctx: AppContext, input: RegisterInput): User {
   const email = input.email.trim();
+  assertAcceptablePassword(input.password, email);
   if (!email.includes('@')) throw badRequest('email is invalid');
   if (findByEmail(ctx, email)) throw conflict('email is already registered');
   const { hash, salt } = hashPassword(input.password, ctx.config.passwordCost);

@@ -1,4 +1,5 @@
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { badRequest } from '../lib/errors.ts';
 
 const KEY_LENGTH = 32;
 
@@ -15,4 +16,12 @@ export function verifyPassword(password: string, hash: string, salt: string, cos
   const candidate = Buffer.from(hashPassword(password, cost, salt).hash, 'hex');
   const expected = Buffer.from(hash, 'hex');
   return candidate.length === expected.length && timingSafeEqual(candidate, expected);
+}
+
+/** Reject passwords that are too short or are simply the account's email address. */
+export function assertAcceptablePassword(password: string, email: string): void {
+  if (password.length < 8) throw badRequest('password must be at least 8 characters');
+  if (password.toLowerCase() === email.toLowerCase()) {
+    throw badRequest('password must not be your email address');
+  }
 }
