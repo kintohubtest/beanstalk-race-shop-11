@@ -44,6 +44,8 @@ export interface User {
   role: Role;
   passwordHash: string;
   passwordSalt: string;
+  /** Wholesale accounts with a resale certificate are never charged sales tax. */
+  taxExempt?: boolean;
   addresses: Address[];
   createdAt: string;
 }

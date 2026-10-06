@@ -17,6 +17,8 @@ export interface InvoiceInput {
   address: Address;
   items: InvoiceItem[];
   coupon?: Coupon;
+  /** Skip sales tax entirely, e.g. for wholesale accounts. */
+  taxExempt?: boolean;
 }
 
 export type InvoiceDraft = Omit<Invoice, 'id' | 'number'>;
@@ -48,6 +50,19 @@ export function buildInvoice(ctx: AppContext, input: InvoiceInput): InvoiceDraft
   const lineDiscounts = allocateDiscount(nets, discount);
 
   const lines = input.items.map((item, i) => buildInvoiceLine(ctx, input.address, item, lineDiscounts[i]));
+  const lines: InvoiceLine[] = input.items.map((item, i) => {
+    const taxRate = input.taxExempt ? 0 : taxRateFor(input.address, item.taxClass, ctx.config.fallbackTaxRate);
+    return {
+      productId: item.productId,
+      description: item.description,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      net: nets[i],
+      discount: lineDiscounts[i],
+      taxRate,
+      tax: applyRate(nets[i] - lineDiscounts[i], taxRate),
+    };
+  });
 
   const tax = sumCents(lines.map((line) => line.tax));
   const federal = sumCents(

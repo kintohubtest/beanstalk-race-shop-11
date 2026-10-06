@@ -31,6 +31,7 @@ export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Ord
     userId: user.id,
     address,
     couponCode: input.couponCode,
+    taxExempt: user.taxExempt,
     items: priced.lines.map((line) => ({
       productId: line.productId,
       description: line.name,
