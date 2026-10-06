@@ -24,8 +24,12 @@ export function reserve(ctx: AppContext, lines: CartLine[]): void {
     }
     const level = getStock(ctx, line.productId);
     if (availableQuantity(level) < line.quantity) {
+    if (availableQuantity(getStock(ctx, line.productId)) < line.quantity) {
       throw conflict(`not enough stock for ${line.productId}`);
     }
+  }
+  for (const line of lines) {
+    const level = getStock(ctx, line.productId);
     setReserved(ctx, level, level.reserved + line.quantity);
   }
 }
