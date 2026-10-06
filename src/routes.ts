@@ -43,6 +43,7 @@ export function registerRoutes(router: Router): void {
   // billing
   router.add('GET', '/orders/:id/invoice', 'user', billing.invoiceForOrder);
   router.add('GET', '/invoices/:id', 'user', billing.getInvoice);
+  router.add('GET', '/invoices/:id/text', 'user', billing.invoiceText);
   router.add('POST', '/invoices/:id/pay', 'admin', billing.payInvoice);
 
   // shipping

@@ -1,7 +1,8 @@
 import { notFound } from '../lib/errors.ts';
-import { ok } from '../router.ts';
+import { json, ok } from '../router.ts';
 import type { Handler } from '../router.ts';
 import type { Invoice, User } from '../types.ts';
+import { renderInvoiceText } from './render.ts';
 import { getInvoice as loadInvoice, invoiceForOrder as loadInvoiceForOrder, markPaid } from './service.ts';
 
 /** Customers only see their own invoices; admins see all. Anything else looks like a 404. */
@@ -16,3 +17,8 @@ export const invoiceForOrder: Handler = (req, ctx) =>
   ok(visibleTo(req.user!, loadInvoiceForOrder(ctx, req.params.id)));
 
 export const payInvoice: Handler = (req, ctx) => ok(markPaid(ctx, req.params.id));
+
+export const invoiceText: Handler = (req, ctx) =>
+  json(200, renderInvoiceText(visibleTo(req.user!, loadInvoice(ctx, req.params.id))), {
+    'content-type': 'text/plain; charset=utf-8',
+  });
