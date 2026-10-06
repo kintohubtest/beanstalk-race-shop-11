@@ -18,6 +18,12 @@ export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Ord
   const address = user.addresses[input.addressIndex];
   if (!address) throw badRequest('choose a saved shipping address');
   const cart = getCart(ctx, user.id);
+  for (const line of cart.lines) {
+    if (line.quantity > ctx.config.maxLineQuantity) {
+      const name = ctx.store.products.get(line.productId)?.name ?? line.productId;
+      throw badRequest(`at most ${ctx.config.maxLineQuantity} units of ${name} per order`);
+    }
+  }
   const priced = priceCart(ctx, cart);
 
   reserve(ctx, cart.lines);
