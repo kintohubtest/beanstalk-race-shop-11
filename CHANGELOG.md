@@ -13,6 +13,7 @@ All notable changes to Beanstalk Shop are recorded here.
 ### Changed
 
 - Product search ignores letter case.
+- Product and order lists send an `x-total-count` header.
 
 ### Fixed
 
