@@ -1,4 +1,4 @@
-import { applyRate, sumCents } from '../lib/money.ts';
+import { applyRateToTotal, sumCents } from '../lib/money.ts';
 import type { Address, AppContext, Cents, Coupon, Invoice, InvoiceLine, TaxClass } from '../types.ts';
 import { allocateDiscount, couponDiscount, validateCoupon } from './discounts.ts';
 import { taxComponentsFor, taxRateFor } from './tax.ts';
@@ -37,6 +37,17 @@ export function buildInvoiceLine(ctx: AppContext, address: Address, item: Invoic
     taxRate,
     tax: applyRate(net - discount, taxRate),
   };
+/** Tax per line, rounded once for each distinct rate over the lines that share it. */
+function taxByRate(taxable: Cents[], rates: number[]): Cents[] {
+  const taxes = taxable.map(() => 0);
+  for (const rate of new Set(rates)) {
+    const indexes = rates.flatMap((r, i) => (r === rate ? [i] : []));
+    const shares = applyRateToTotal(indexes.map((i) => taxable[i]), rate);
+    indexes.forEach((lineIndex, k) => {
+      taxes[lineIndex] = shares[k];
+    });
+  }
+  return taxes;
 }
 
 /** Price an order: line nets, the coupon, tax per line, and the due date. Pure apart from the clock. */
@@ -48,6 +59,18 @@ export function buildInvoice(ctx: AppContext, input: InvoiceInput): InvoiceDraft
   const lineDiscounts = allocateDiscount(nets, discount);
 
   const lines = input.items.map((item, i) => buildInvoiceLine(ctx, input.address, item, lineDiscounts[i]));
+  const rates = input.items.map((item) => taxRateFor(input.address, item.taxClass, ctx.config.fallbackTaxRate));
+  const lineTaxes = taxByRate(nets.map((net, i) => net - lineDiscounts[i]), rates);
+  const lines: InvoiceLine[] = input.items.map((item, i) => ({
+    productId: item.productId,
+    description: item.description,
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+    net: nets[i],
+    discount: lineDiscounts[i],
+    taxRate: rates[i],
+    tax: lineTaxes[i],
+  }));
 
   const tax = sumCents(lines.map((line) => line.tax));
   const federal = sumCents(

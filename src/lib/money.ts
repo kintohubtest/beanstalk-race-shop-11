@@ -44,6 +44,14 @@ export function allocate(total: Cents, weights: number[]): Cents[] {
   return parts;
 }
 
+/**
+ * Apply `rate` to a group of amounts as one sum: round once, then spread the rounded
+ * result over the amounts so the parts add up to it exactly.
+ */
+export function applyRateToTotal(amounts: Cents[], rate: number): Cents[] {
+  return allocate(applyRate(sumCents(amounts), rate), amounts);
+}
+
 export function formatMoney(amount: Cents, currency: Currency = 'USD'): string {
   const sign = amount < 0 ? '-' : '';
   const abs = Math.abs(amount);
