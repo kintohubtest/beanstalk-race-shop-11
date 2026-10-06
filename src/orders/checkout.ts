@@ -27,6 +27,7 @@ export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Ord
       throw badRequest(`at most ${ctx.config.maxLineQuantity} units of ${name} per order`);
     }
   }
+  if (cart.lines.length === 0) throw badRequest('cart is empty');
   const priced = priceCart(ctx, cart);
 
   reserve(ctx, cart.lines);
