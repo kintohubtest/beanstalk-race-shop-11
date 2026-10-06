@@ -20,7 +20,7 @@ export function renderNotification(kind: NotificationKind, order: Order, currenc
     case 'order_shipped':
       return {
         subject: `Order ${order.number} has shipped`,
-        body: `Your order ${order.number} is on its way.`,
+        body: `Your order ${order.number} is on its way.\nTracking number: ${order.trackingNumber}`,
       };
     case 'order_cancelled':
       return {
