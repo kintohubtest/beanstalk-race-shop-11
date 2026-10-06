@@ -11,12 +11,15 @@ export interface CheckoutInput {
   addressIndex: number;
   couponCode?: string;
   method?: ShippingMethod;
+  note?: string;
 }
 
 /** Turn the user's cart into a confirmed order: reserve stock, invoice it, quote shipping, notify. */
 export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Order {
   const address = user.addresses[input.addressIndex];
   if (!address) throw badRequest('choose a saved shipping address');
+  const note = input.note?.trim() ?? '';
+  if (note.length > 200) throw badRequest('note must be at most 200 characters');
   const cart = getCart(ctx, user.id);
   const priced = priceCart(ctx, cart);
 
@@ -60,6 +63,7 @@ export function checkout(ctx: AppContext, user: User, input: CheckoutInput): Ord
     shippingAddress: address,
     invoiceId: invoice.id,
     trackingNumber: null,
+    note,
     createdAt: now,
     updatedAt: now,
   });
